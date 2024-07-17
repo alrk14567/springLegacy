@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0" metadata-complete="true">
+  <context-param>
+      <!--
+     콘텍스트 파람의 경우 스프링 설정파일의 위치를 지정한다.
+     -->
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+      <!-- Spring Legacy에서 prefix, suffix, 내가 만든 자바 패키지에 대한 설정이 담긴 XML 파일의 위치 설정
+     만약 스프링에서 "따로 관리해야하는 객체"(aka 빈)을 등록해야하는 경우, 의존성을 주입하는 경우
+     application-context.xml에 등록하면 된다.
+    -->
+      /WEB-INF/spring/application-context.xml
+      <!--스프링 시큐리티 설정파일로 보완 관련 설정을 포함-->
+      /WEB-INF/spring/security-context.xml
+    </param-value>
+
+  </context-param>
+  <!--
+    위에서 지정한 설정 XML파일을 객체화 시킬때 사용할 클래스
+    간단히 말해 여기선 어플리캐이션 컨텍스트를 초기화하고 종료하는데 사용되는 리스너를 정의한다.
+  -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <!--
+    Spring Framework에서 뷰에 대한 설정, 컨트롤러, 서비스 등의 패키지에 대한 설정을 담은 디스패쳐를 설정하는 부분
+    서브렛의 하나인데 어떤 url에 대해 이러한 클래스를 실행시킬 준비하라고 하는친구다.
+    아래에 init-param은 dispatcherServlet 객체를 초기화 할꺼임
+  -->
+  <servlet>
+    <servlet-name>dispatcher</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>/WEB-INF/spring/dispatcher-servlet.xml</param-value>
+    </init-param>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>dispatcher</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <!--스프링 시큐리티의 필터체인을 정의-->
+  <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+</web-app>
+
+
+
+
+
+
+
+
+
+
+
+
+
